@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans 
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/tx 
+            http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName"  value="com.mysql.jdbc.Driver"></property>
+        <property name="url" value="jdbc:mysql://localhost:3306/ADMISSION"></property>
+        <property name="username" value="root"></property>
+        <property name="password" value="1234"></property>
+    </bean>
+    
+    <bean id="sessionFactory"	class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>	
+        <property name="mappingResources">
+            <list>
+                <value>beans/Course.hbm.xml</value>
+                <value>beans/Student.hbm.xml</value>
+                <value>beans/Result.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="dao" class="dao.DaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+    <bean id="validator" class="service.InputValidator"></bean>
+    
+    <bean id="emailsender" class="service.EmailSender">
+        <property name="username" value="mcit.java@gmail.com"/>
+        <property name="password" value="zz123321"/>
+        <property name="authKEY" value="mail.smtp.auth"/>
+        <property name="starttlsKEY" value="mail.smtp.starttls.enable"/>
+        <property name="hostKEY" value="mail.smtp.host"/>
+        <property name="portKEY" value="mail.smtp.port"/>
+        <property name="authVAL" value="true"/>
+        <property name="starttlsVAL" value="true"/>
+        <property name="hostVAL" value="smtp.gmail.com"/>
+        <property name="portVAL" value="587"/>
+    </bean>
+    
+    <bean id="outputconverter" class="service.OutputConverter"></bean>
+    
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+        <property name="defaultLocale" value="en_CA" />
+    </bean>
+    
+    <bean id="student" class="beans.Student"></bean>
+    <bean id="course" class="beans.Course"></bean>
+    <bean id="result" class="beans.Result"></bean>
+
+
+</beans>

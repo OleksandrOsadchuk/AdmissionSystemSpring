@@ -29,12 +29,13 @@ public class OutputConverter {
                     + "<p>Student List</p>"
                     + "<table>"
                     + "<tr><th>id </th><th>FirstName</th><th>LastName</th>"
-                    + "<th>Gender </th><th>StartDate </th></tr>";
+                    + "<th>Gender </th><th>Email</th><th>StartDate </th></tr>";
             for (Item item : lst) {
                 Student s = (Student) item;
                 out = out + "<tr style=\"text-align: left\">"
                         + "<td>" + s.getId() + "</td><td>" + s.getFirstName() + "</td><td>"
                         + s.getLastName() + "</td><td>" + s.getGender() + "</td><td>"
+                        + s.getEmail() + "</td><td>"
                         + s.getStartDate() + "</td>"
                         + "</tr>";
             }

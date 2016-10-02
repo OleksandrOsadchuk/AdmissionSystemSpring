@@ -120,8 +120,21 @@ public class DaoHibernate implements Dao {
             ssn = sf.openSession();
             ssn.getTransaction().begin();
             ssn.delete(ls.get(0));
+            
+            if(item.getClass().getSimpleName().equalsIgnoreCase("Student")){
+                Student s = (Student)item;
+               List<Result> rlist = ssn.createQuery("select r from Result r where r.studentId = :studentId")
+                    .setParameter("studentId", s.getId()).list();
+               for (Result result: rlist) ssn.delete(result);
+            }
+            if(item.getClass().getSimpleName().equalsIgnoreCase("Course")){
+                Course c = (Course)item;
+               List<Result> rlist = ssn.createQuery("select r from Result r where r.courseId = :courseId")
+                    .setParameter("courseId", c.getId()).list();
+               for (Result result: rlist) ssn.delete(result);
+            }
             ssn.getTransaction().commit();
-            return 1;
+            return 1; 
 
         } catch (HibernateException he) {
             if (ssn.getTransaction() != null) {

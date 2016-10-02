@@ -37,7 +37,9 @@ public class InputValidator implements ApplicationContextAware {
                 msg = mb.getString("Vlastnametoo");
             } else if (!request.getParameter("gender").equalsIgnoreCase("M")
                     && !request.getParameter("gender").equalsIgnoreCase("F")) {
-                msg = mb.getString("Vgender");;
+                msg = mb.getString("Vgender");
+            } else if (!request.getParameter("email").matches("[a-z0-9](\\.?[a-z0-9_-]){0,}@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}")){
+                msg = mb.getString("incorrectaddrM");
             } else if (!request.getParameter("sdate").matches(
                     "(199[0-9]|200[0-9]|201[0-6])-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|30)")) {
                 msg = mb.getString("Vdatemust");

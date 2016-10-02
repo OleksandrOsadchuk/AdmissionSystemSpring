@@ -13,6 +13,8 @@ import dao.Dao;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -28,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import service.EmailSender;
 import service.InputValidator;
 import service.OutputConverter;
+import service.ResultProfiler;
 
 /**
  *
@@ -38,7 +41,7 @@ public class MainController {
 
     String msg, tabName;
     List<Item> itemList;
-    List l;
+    List l, sidList,cidList;
     int lastIdSt, lastIdCs, lastIdRe, lastId, editId, r;
     Item inputItem;
 
@@ -106,6 +109,33 @@ public class MainController {
         } else {
             msg = mb.getString("foundM") + " " + mb.getString("entriesM") + " " + mb.getString(tabName) + " : " + itemList.size();
             l = this.processItemList(itemList);
+           
+            // STUDENT FILE DISPLAY //
+            if(tabName.equalsIgnoreCase("Student")){
+                List<Student> lst = l;
+                mav.setViewName("student");
+                msg=mb.getString("Lstudentdata");
+                
+                List listRP = new ArrayList();
+                
+                List<Result> lr = dao.getAll("Result");
+                List<Course> lc = dao.getAll("Course");
+                String cName="";
+                for(Result r : lr){
+                   
+                    if(r.getStudentId()==lst.get(0).getId()) {
+                        for(Course c: lc){
+                            if(c.getId()==r.getCourseId()) cName = c.getName();
+                        }
+                        ResultProfiler rp = new ResultProfiler(r.getCourseId(), cName, r.getMark1(), r.getMark2());
+                        listRP.add(rp);
+                     }
+                    
+                }
+                
+                    mav.addObject("listrp", listRP);
+            }
+                
         }
         mav.addObject("message", msg);
         mav.addObject("list", l);
@@ -178,6 +208,11 @@ public class MainController {
             mav.addObject("operationValue", "add");
             mav.addObject("idValue", (lastId + 1));
             mav.setViewName("form");
+            if(tabName.equalsIgnoreCase("Result")) {
+                buildStudCouseIdLists(request);
+                mav.addObject("cidList",cidList);
+                mav.addObject("sidList",sidList);
+            }
         }
         mav.addObject("message", msg);
         mav.addObject("tab", tabName);
@@ -205,12 +240,15 @@ public class MainController {
             l = this.processItemList(dao.getAll(tabName));
             mav.addObject("list", l);
         } else {
-            // inputItem = this.setItemIdTabname(request);
             mav.addObject("list", l); // get values back from the same 'l' from editForm(call) 
-            //mav.addObject("tab", tabName);
             mav.addObject("submitLabel", mb.getString("savechangesM"));
             mav.addObject("operationValue", "update");
             mav.addObject("idValue", editId);
+            if(tabName.equalsIgnoreCase("Result")) {
+                buildStudCouseIdLists(request);
+                mav.addObject("cidList",cidList);
+                mav.addObject("sidList",sidList);
+            }
             mav.setViewName("form");
         }
         mav.addObject("message", msg);
@@ -223,7 +261,8 @@ public class MainController {
     public ModelAndView addForm(HttpServletRequest request, HttpServletResponse response) {
 
         ModelAndView mav = new ModelAndView("form");
-
+        tabName=request.getParameter("tab");
+        
         msg = mb.getString("pleasefillM");
         if (tabName.equals("Result")) {
             msg = mb.getString("fillresultM");
@@ -231,6 +270,13 @@ public class MainController {
         mav.addObject("submitLabel", mb.getString("addM"));
         mav.addObject("operationValue", "add");
         mav.addObject("idValue", (lastId + 1));
+        
+        if(tabName.equalsIgnoreCase("Result")) {
+            buildStudCouseIdLists(request);
+            mav.addObject("cidList",cidList);
+            mav.addObject("sidList",sidList);
+        }
+            
         mav.addObject("message", msg);
         mav.addObject("tab", tabName);
         mav.addObject("locale", currentLocale);
@@ -244,6 +290,26 @@ public class MainController {
 
         inputItem = this.buildItemIdTabname(request);
         l = this.processItemList(dao.getId(inputItem));
+        
+        if(tabName.equalsIgnoreCase("Result")) {
+            buildStudCouseIdLists(request);
+            mav.addObject("cidList",cidList);
+            mav.addObject("sidList",sidList);
+        }
+        
+//        if(tabName.equalsIgnoreCase("Result")){
+//            List<Result> rList = l;
+//            List cidList = new ArrayList();
+//            List sidList = new ArrayList();
+//            for (Result r: rList ){
+//                if(!cidList.contains(r.getCourseId())) cidList.add(r.getCourseId());
+//                if(!sidList.contains(r.getStudentId())) sidList.add(r.getStudentId());
+//            }
+//            Collections.sort(cidList);Collections.sort(sidList);
+//            mav.addObject("cidList",cidList);
+//            mav.addObject("sidList",sidList);
+//        }
+        
         mav.addObject("list", l);
         mav.addObject("submitLabel", mb.getString("savechangesM"));
         mav.addObject("operationValue", "update");
@@ -362,6 +428,7 @@ public class MainController {
             s.setId(Integer.parseInt(request.getParameter("id")));
             s.setFirstName(request.getParameter("fn"));
             s.setLastName(request.getParameter("ln"));
+            s.setEmail(request.getParameter("email"));
             s.setGender(request.getParameter("gender"));
             s.setStartDate(request.getParameter("sdate"));
             inputItem = s;
@@ -393,6 +460,31 @@ public class MainController {
             out += url.getFile() + "<br>";
         }
         return out;
+    }
+
+    private void buildStudCouseIdLists(HttpServletRequest request) {
+        String sid, cid;
+            if(request.getParameter("sid")==null) sid="";
+                else sid=request.getParameter("sid");
+            if(request.getParameter("cid")==null) cid="";
+                else cid=request.getParameter("cid");
+            List<Student> ls = dao.getAll("Student");
+            List<Course> lc = dao.getAll("Course");
+            sidList = new ArrayList();
+            cidList = new ArrayList();
+            
+            if(sid.equalsIgnoreCase(""))
+                for (Student s: ls){ if(!sidList.contains(s.getId())) sidList.add(s.getId());}
+            else
+                sidList.add(sid);
+            
+            if(cid.equalsIgnoreCase(""))
+                for (Course c: lc ){ if(!cidList.contains(c.getId())) cidList.add(c.getId());}
+            else
+                cidList.add(cid);
+            
+            Collections.sort(sidList);
+            Collections.sort(cidList);
     }
 
 }

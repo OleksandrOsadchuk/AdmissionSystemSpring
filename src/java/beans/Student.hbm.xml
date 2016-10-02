@@ -12,6 +12,9 @@
         <property name="lastName" type="string">
             <column name="lastname" length="20" />
         </property>
+        <property name="email" type="string">
+            <column name="email" length="25" />
+        </property>
         <property name="gender" type="string">
             <column name="gender" length="1" />
         </property>

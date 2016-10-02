@@ -17,8 +17,21 @@
     
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Student Admission</title>
+        <title>Student Details</title>
 	<link rel = "stylesheet" href="<c:url value="/css/index.css"/>">
+        <style>
+            .green  {background-color:#ddffee;}
+            .red    {background-color:#ffe2e2;}
+            .greenfont  {color:limegreen; font-weight: bold}
+            .redfont    {color:crimson; font-weight: bold}
+             /*.td30 td,th {padding-left:20px; padding-right:20px; height: 40px;}*/
+             /*table.td5 td {padding-bottom: 5px; padding-top: 5px;}*/
+             table {width:75%;}
+            .lbutton {display: inline-block; margin: 20px;}
+            /*.th1 {border: 0; height: 20px;}*/
+            .trLo th,td{height: 20px;}
+            .trHi th,td{height: 30px;}
+        </style>
     </head>
     <body>
         <div id="top"><fmt:message key="Ladmissionsystem"/></div>
@@ -61,138 +74,86 @@
         </div>
 
 	<div id="middle">
+            
+            <form action="findId" method="get">
+                <label><fmt:message key="Lfindstud"/>&nbsp</label><input type="number" name="id">
+                <input type="hidden" name="tab" value="Student">
+                <input type="submit" value="<fmt:message key="Lsearch"/>" id="highlight">
+                <a class="midA" href="addForm?tab=Student"><fmt:message key="Laddstud"/></a>
+            </form>
 
-            <c:choose>
-                <c:when test="${tab=='Student'}">
+            <c:set var="s" value="${list[0]}"/>
+            <p> <b> ${message} ID: ${s.id} </b> </p>
+            
+            <table class="trHi">
+                <tr>
+                    <th><fmt:message key="Lfname"/> </th>
+                    <th><fmt:message key="Llastname"/></th>
+                    <th><fmt:message key="Lgender"/> </th>
+                    <th><fmt:message key="Lemail"/> </th>
+                    <th><fmt:message key="Lstartdate"/> </th>
+                </tr>
 
-                    <form action="findId" method="get">
-                        <label><fmt:message key="Lfindstud"/>&nbsp</label><input type="number" name="id">
-                        <input type="hidden" name="tab" value="Student">
-                        <input type="submit" value="<fmt:message key="Lsearch"/>" id="highlight">
-                        <a class="midA" href="addForm?tab=Student" id="highlight"><fmt:message key="Laddstud"/></a>
-                    </form>
-
-                <p>${message}</p>
-                <table>
+                <tr style="text-align: left">
+                    <td>   <c:out value="${s.firstName}" />    </td>
+                    <td>   <c:out value="${s.lastName}" />     </td>
+                    <td>   <c:out value="${s.gender}" />     </td>
+                    <td>   <c:out value="${s.email}" />     </td>
+                    <td>   <c:out value="${s.startDate}" />     </td>
+                </tr>
+                
+            </table>
+         
+            <table>
+                <tr class="trHi" style="text-align: left">
+                    <td colspan="5" style="text-align: left;">
+                        <fmt:message key="Lassignedcourses"/>:
+                        <c:if test="${empty listrp}"> <fmt:message key="nothingfoundM"/></c:if>
+                        
+                    </td>
+                </tr>
+                <c:if test="${not empty listrp}">
                     <tr>
-                        <th>id </th>
-                        <th><fmt:message key="Lfname"/> </th>
-                        <th><fmt:message key="Llastname"/></th>
-                        <th><fmt:message key="Lgender"/> </th>
-                        <th><fmt:message key="Lstartdate"/> </th>
-                        <th><fmt:message key="Laction"/> </th>
-                    </tr>
-                <c:forEach var="s" items="${list}">
-                    <tr style="text-align: left">
-
-                        <td>   <c:out value="${s.id}" />           </td>
-                        <td>   <c:out value="${s.firstName}" />    </td>
-                        <td>   <c:out value="${s.lastName}" />     </td>
-                        <td>   <c:out value="${s.gender}" />     </td>
-                        <td>   <c:out value="${s.startDate}" />     </td>
-                        <td>
-                            <a href="editForm?tab=Student&id=${s.id}"><fmt:message key="Ledit"/></a> &nbsp&nbsp
-                            <a href="delete?tab=Student&id=${s.id}"><fmt:message key="Ldelete"/></a>
-                        </td>
-                    </tr>
-                    </c:forEach>
-                </table>
-                    <br>
-                    
-
-                </c:when>
-
-                <c:when test="${tab=='Course'}">
-
-                    <form action="findId" method="get">
-                        <label><fmt:message key="Lfindcourse"/>&nbsp</label><input type="number" name="id">
-                        <input type="hidden" name="tab" value="Course">
-                        <input type="submit" value="<fmt:message key="Lsearch"/>" id="highlight">
-                        <a class="midA" href="addForm?tab=Course" id="highlight"><fmt:message key="Laddcourse"/></a>
-                    </form>
-
-                <p>${message}</p>
-                <table>
-                    <tr>
-                        <th><fmt:message key="Lcourseid"/></th>
-                        <th><fmt:message key="Lcoursename"/></th>
-                        <th><fmt:message key="Laction"/></th>
-                    </tr>
-                <c:forEach var="cs" items="${list}">
-                    <tr style="text-align: left">
-                        <td>   <c:out value="${cs.id}" />      </td>
-                        <td>   <c:out value="${cs.name}" />    </td>
-                        <td>
-                            <a href="editForm?tab=Course&id=${cs.id}"><fmt:message key="Ledit"/></a> &nbsp&nbsp
-                            <a href="delete?tab=Course&id=${cs.id}"><fmt:message key="Ldelete"/></a>
-                        </td>
-                    </tr>
-                    </c:forEach>
-                </table>
-                <br>
-                </c:when>
-
-                <c:when test="${tab=='Result'}">
-
-                   <form action="findId" method="get">
-                        <label><fmt:message key="Lfindresult"/> &nbsp</label><input type="number" name="sid" style="width:50px;">
-                        <label><fmt:message key="Landcourse"/> &nbsp</label><input type="number" name="cid" style="width:50px;">
-                        <input type="hidden" name="tab" value="Result">
-                        <input type="submit" value="<fmt:message key="Lsearch"/>" id="highlight">
-                        <a class="midA" href="addForm?tab=Result" id="highlight"><fmt:message key="Laddresult"/></a>
-                    </form>
-                <p>${message}</p>
-                <table>
-                    <tr>
-                        <th><fmt:message key="Lstudentid"/> </th>
                         <th><fmt:message key="Lcourseid"/> </th>
+                        <th><fmt:message key="Lcoursename"/> </th>
                         <th><fmt:message key="Lmark"/>1 </th>
                         <th><fmt:message key="Lmark"/>2 </th>
-                        <th><fmt:message key="Laction"/></th>
+                        <th>Grade</th>
                     </tr>
-                <c:forEach var="r" items="${list}">
+                    <c:forEach var="r" items="${listrp}">
                     <tr style="text-align: left">
-                        <td><a href="findId?tab=Student&id=${r.studentId}">${r.studentId}</a></td>
                         <td><a href="findId?tab=Course&id=${r.courseId}">${r.courseId}</a></td>
-                        <td>   <c:out value="${r.mark1}" />    </td>
-                        <td>   <c:out value="${r.mark2}" />    </td>
-                        <td>
-                            <a href="editForm?tab=Result&sid=${r.studentId}&cid=${r.courseId}"><fmt:message key="Ledit"/></a> &nbsp&nbsp
-                            <a href="delete?tab=Result&sid=${r.studentId}&cid=${r.courseId}"><fmt:message key="Ldelete"/></a>
-                        </td>
+                        <td>${r.courseName}</td>
+                        <c:set var="color" value="${r.mark1 le 60 ? 'red': 'green'}"/>
+                        <td class="${color}"> ${r.mark1}</td>
+                        <c:set var="color" value="${r.mark2 le 60 ? 'red': 'green'}"/>
+                        <td class="${color}"> ${r.mark2}</td>
+                        <c:set var="color" value="${r.grade ge 'D' ? 'redfont':'greenfont'}"/>
+                        <td class="${color}">${r.grade}</td>
                     </tr>
                     </c:forEach>
+                </c:if>
                 </table>
-                <br>
-                </c:when>
                     
-                <c:otherwise>
-                    <p>${message}</p>
-                    <p><fmt:message key="Lpleasechoose"/></p>
-                    <br>
-                    <div style="font-size:80%; border: 1px solid gray; display:inline-block; padding:20px">                       
-                        Server info: <br>
-                        Tomcat Version :
-                        <%= application.getServerInfo() %><br>    
-                        Servlet Specification Version :
-                        <%= application.getMajorVersion() %>.<%= application.getMinorVersion() %> <br>    
-                        JSP version :
-                        <%=JspFactory.getDefaultFactory().getEngineInfo().getSpecificationVersion() %><br>
-                    </div>
-                   
-                </c:otherwise>
-                    
-             </c:choose>
-                    
-             <c:if test="${(tab=='Student')||(tab=='Course')||(tab=='Result')}">
-                <form action="email" method="get">
-                    <label><fmt:message key="Lgetemail"/></label><input type="text" name="mailAddr">
-                    <input type="hidden" name="tab" value="${tab}" >
-                    <input type="submit" value="<fmt:message key="Lget"/>" id="highlight">
-                </form> 
-             </c:if>
+            <br>
+                <a class="midA" href="addForm?tab=Result&sid=${s.id}"><fmt:message key="Laddresult"/></a>
+                <a class="midA lbutton" href="editForm?tab=Student&id=${s.id}">
+                            <fmt:message key="Ledit"/>&nbsp<fmt:message key="Lfile"/></a>&nbsp&nbsp
+                <a class="midA lbutton" href="delete?tab=Student&id=${s.id}">
+                    <fmt:message key="Ldelete"/>&nbsp<fmt:message key="Lfile"/></a>
+            <br><br>
+            
+            <form action="email" method="get">
+                <label><fmt:message key="Lgetemail"/></label><input type="text" name="mailAddr">
+                <input type="hidden" name="tab" value="${tab}" >
+                <input type="submit" value="<fmt:message key="Lget"/>" id="highlight">
+            </form> 
                     
 	</div>
+                    
+                    
+                       
+                        
 
 	<div id="footer">
 	(c) Oleksandr / MCIT.  Programming For Mobile Class, 2016

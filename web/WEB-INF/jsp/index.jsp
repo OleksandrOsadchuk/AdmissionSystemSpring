@@ -19,6 +19,12 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Student Admission</title>
 	<link rel = "stylesheet" href="<c:url value="/css/index.css"/>">
+        <style>
+            .green  {background-color:#ddffee;}
+            .red    {background-color:#ffe2e2;}
+            /*.green  {color:limegreen; font-weight: bold}*/
+            /*.red    {color:red; font-weight: bold}*/
+        </style>
     </head>
     <body>
         <div id="top"><fmt:message key="Ladmissionsystem"/></div>
@@ -69,7 +75,7 @@
                         <label><fmt:message key="Lfindstud"/>&nbsp</label><input type="number" name="id">
                         <input type="hidden" name="tab" value="Student">
                         <input type="submit" value="<fmt:message key="Lsearch"/>" id="highlight">
-                        <a class="midA" href="addForm?tab=Student" id="highlight"><fmt:message key="Laddstud"/></a>
+                        <a class="midA" href="addForm?tab=Student"><fmt:message key="Laddstud"/></a>
                     </form>
 
                 <p>${message}</p>
@@ -79,16 +85,18 @@
                         <th><fmt:message key="Lfname"/> </th>
                         <th><fmt:message key="Llastname"/></th>
                         <th><fmt:message key="Lgender"/> </th>
+                        <!--<th><fmt:message key="Lemail"/> </th>-->
                         <th><fmt:message key="Lstartdate"/> </th>
                         <th><fmt:message key="Laction"/> </th>
                     </tr>
                 <c:forEach var="s" items="${list}">
                     <tr style="text-align: left">
 
-                        <td>   <c:out value="${s.id}" />           </td>
+                        <td>   <a href="findId?tab=Student&id=${s.id}">${s.id}</a>           </td>
                         <td>   <c:out value="${s.firstName}" />    </td>
                         <td>   <c:out value="${s.lastName}" />     </td>
                         <td>   <c:out value="${s.gender}" />     </td>
+                        <!--<td>   <c:out value="${s.email}" />     </td>-->
                         <td>   <c:out value="${s.startDate}" />     </td>
                         <td>
                             <a href="editForm?tab=Student&id=${s.id}"><fmt:message key="Ledit"/></a> &nbsp&nbsp
@@ -108,7 +116,7 @@
                         <label><fmt:message key="Lfindcourse"/>&nbsp</label><input type="number" name="id">
                         <input type="hidden" name="tab" value="Course">
                         <input type="submit" value="<fmt:message key="Lsearch"/>" id="highlight">
-                        <a class="midA" href="addForm?tab=Course" id="highlight"><fmt:message key="Laddcourse"/></a>
+                        <a class="midA" href="addForm?tab=Course"><fmt:message key="Laddcourse"/></a>
                     </form>
 
                 <p>${message}</p>
@@ -120,7 +128,7 @@
                     </tr>
                 <c:forEach var="cs" items="${list}">
                     <tr style="text-align: left">
-                        <td>   <c:out value="${cs.id}" />      </td>
+                        <td>   <a href="findId?tab=Course&id=${cs.id}">${cs.id}</a> </td>
                         <td>   <c:out value="${cs.name}" />    </td>
                         <td>
                             <a href="editForm?tab=Course&id=${cs.id}"><fmt:message key="Ledit"/></a> &nbsp&nbsp
@@ -139,7 +147,7 @@
                         <label><fmt:message key="Landcourse"/> &nbsp</label><input type="number" name="cid" style="width:50px;">
                         <input type="hidden" name="tab" value="Result">
                         <input type="submit" value="<fmt:message key="Lsearch"/>" id="highlight">
-                        <a class="midA" href="addForm?tab=Result" id="highlight"><fmt:message key="Laddresult"/></a>
+                        <a class="midA" href="addForm?tab=Result"><fmt:message key="Laddresult"/></a>
                     </form>
                 <p>${message}</p>
                 <table>
@@ -150,12 +158,15 @@
                         <th><fmt:message key="Lmark"/>2 </th>
                         <th><fmt:message key="Laction"/></th>
                     </tr>
-                <c:forEach var="r" items="${list}">
+                    <c:forEach var="r" items="${list}">
                     <tr style="text-align: left">
                         <td><a href="findId?tab=Student&id=${r.studentId}">${r.studentId}</a></td>
                         <td><a href="findId?tab=Course&id=${r.courseId}">${r.courseId}</a></td>
-                        <td>   <c:out value="${r.mark1}" />    </td>
-                        <td>   <c:out value="${r.mark2}" />    </td>
+                        
+                        <c:set var="color" value="${r.mark1 le 60 ? 'red': 'green'}"/>
+                        <td class="${color}"> ${r.mark1}</td>
+                        <c:set var="color" value="${r.mark2 le 60 ? 'red': 'green'}"/>
+                        <td class="${color}"> ${r.mark2}</td>
                         <td>
                             <a href="editForm?tab=Result&sid=${r.studentId}&cid=${r.courseId}"><fmt:message key="Ledit"/></a> &nbsp&nbsp
                             <a href="delete?tab=Result&sid=${r.studentId}&cid=${r.courseId}"><fmt:message key="Ldelete"/></a>

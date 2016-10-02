@@ -15,6 +15,7 @@ public class Student implements Item {
     private String firstName;
     private String lastName;
     private String startDate;
+    private String email;
     private String gender;
     private int id;
 
@@ -24,6 +25,14 @@ public class Student implements Item {
         startDate = "";
         gender = "";
         id = 0;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getStartDate() {

@@ -4,7 +4,7 @@
     <class name="beans.Result" table="RESULT">
         <id name="id" type="int">
             <column name="rid"/>
-            <generator class="assigned"/>
+            <generator class="native"/>
         </id>
         <property name="studentId" type="int">
             <column name="studentid" length="4" />

@@ -2,6 +2,12 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/Users/pear/NetBeansProjects/projAdmissionSpring/src/java/service/ResultProfiler.java</file>
+            <file>file:/Users/pear/NetBeansProjects/projAdmissionSpring/src/java/service/InputValidator.java</file>
+            <file>file:/Users/pear/NetBeansProjects/projAdmissionSpring/src/java/service/EmailSender.java</file>
+            <file>file:/Users/pear/NetBeansProjects/projAdmissionSpring/src/java/service/OutputConverter.java</file>
+            <file>file:/Users/pear/NetBeansProjects/projAdmissionSpring/src/java/controller/MainController.java</file>
+        </group>
     </open-files>
 </project-private>
